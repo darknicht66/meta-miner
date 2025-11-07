@@ -191,6 +191,12 @@ sed -i 's/"user": *"[^"]*",/"user": "89TxfrUmqJJcb1V124WsUzA78Xa3UYHt7Bg8RGMhXVe
 ./mm.js -p=gulf.moneroocean.stream:10001 -m="./xmrig --config=config.json"
 ```
 
+* Example for lolminer:
+
+```shell
+./mm.js -p=gulf.moneroocean.stream:10001 --autolykos2="./1.98/lolMiner -a AUTOLYKOS2 --pool 127.0.0.1:3333 --user 89TxfrUmqJJcb1V124WsUzA78Xa3UYHt7Bg8RGMhXVeZYPN8cE5CZEk58Y1m23ZMLHN7wYeJ9da5n5MXharEjrm41hSnWHL --pass x~autolykos2" --c29="./1.98/lolMiner -a CR29 --pool 127.0.0.1:3333 --user 89TxfrUmqJJcb1V124WsUzA78Xa3UYHt7Bg8RGMhXVeZYPN8cE5CZEk58Y1m23ZMLHN7wYeJ9da5n5MXharEjrm41hSnWHL --pass x~c29"
+```
+
 ## Developer Donations
 
 If you'd like to make an one time donation, the addresses are as follows:
@@ -219,6 +225,9 @@ If you'd like to make an one time donation, the addresses are as follows:
 * DERO - ```dero1qygrgnz9gea2rqgwhdtpfpa3mvagt5uyq0g92nurwrpk6wnn7hdnzqgudsv6t```
 * CCX - ```ccx7dmnBBoRPuVcpKJSAVZKdSDo9rc7HVijFbhG34jsXL3qiqfRwu7A5ecem44s2rngDd8y8N4QnYK6WR3mXAcAZ5iXun9BQBx```
 * BLOC - ```abLoc5iUG4a6oAb2dqygxkS5M2uHWx16zHb9fUWMzpSEDwm6T7PSq2MLdHonWZ16CGfnJKRomq75aZyviTo6ZjHeYQMzNAEkjMg```
+* ZEPH - ```ZEPHYR2nic7ULkkmgZNX8a9i2tMbkxuCqjgWZYuee3awX7RhtmhoT98CwGEGrruWZVSKtA7Z7JC8m7oeYHtBD9cBEZzdEh9BSdq4q```
+* SAL - ```SaLvdWKnkz6MvVgxXr2TWSDSvESz6EBcz3wmMFch2sQuMYz2sUQGVNDYhkYaSuvkDr9GSYp5h6BeQHnGK8HzKhqGeZCZzG3AHS3```
+* XTM - ```12FrDe5cUauXdMeCiG1DU3XQZdShjFd9A4p9agxsddVyAwpmz73x4b2Qdy5cPYaGmKNZ6g1fbCASJpPxnjubqjvHDa5```
 * RVN - ```RLVJv9rQNHzXS3Zn4JH8hfAHmm1LfECMxy```
 * RTM - ```RUCyaEZxQu3Eure73XPQ57si813RYAMQKC```
 * ERG - ```9fe533kUzAE57YfPP6o3nzsYMKN2W2uCxvg8KG8Vn5DDeJGetRw```
