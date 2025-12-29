@@ -34,7 +34,7 @@ const child_process = require('child_process');
 // *** CONSTS                                                                ***
 // *****************************************************************************
 
-const VERSION      = "v4.4";
+const VERSION      = "v4.6";
 const DEFAULT_ALGO = "rx/0"; // this is algo that is assumed to be sent by pool if its job does not contain algo stratum extension
 const AGENT        = "Meta Miner " + VERSION;
 
@@ -57,11 +57,14 @@ const hashrate_regexes = [
   [1000000, 2, /\|\s+\d+\s+\S*\s*([\d\.]+) MH\/s.*\|\n\+/],                  // gminer
   [1,       2, /\|\s+([\d\.]+) G\/s.*\|\n\+/],                               // gminer (2+ GPUs)
   [1000000, 2, /\|\s+([\d\.]+) MH\/s.*\|\n\+/],                              // gminer (2+ GPUs)
+  [1,       3, /Average speed \(15s\): ([\d\.]+) g\/s/],                     // lolminer
+  [1000000, 3, /Average speed \(15s\): ([\d\.]+) Mh\/s/],                    // lolminer
 ];
 
 function algo_hashrate_factor(algo) {
   switch (algo) {
     case "kawpow": return 1 / 0x100000000;
+    case "c29":    return 1 / 42;
     case "c29s":   return 1 / 32;
     case "c29b":   return 1 / 40;
     case "c29v":   return 1 / 16;
@@ -86,10 +89,12 @@ const bench_algos = [
   "rx/arq",
   "panthera",
   "autolykos2",
+  "c29",
   "c29b",
   "c29s",
   "c29v",
   "ethash",
+  "etchash",
   "k12",
 ];
 
@@ -150,6 +155,9 @@ function bench_algo_deps(bench_algo, perf) {
     case "autolykos2": return {
       "autolykos2":    perf,
     };
+    case "c29": return {
+      "c29":           perf,
+    };
     case "c29b": return {
       "c29b":          perf,
     };
@@ -161,6 +169,9 @@ function bench_algo_deps(bench_algo, perf) {
     };
     case "ethash": return {
       "ethash":        perf,
+    };
+    case "etchash": return {
+      "etchash":       perf,
     };
     case "k12": return {
       "k12":           perf,
@@ -484,7 +495,7 @@ function start_miner(cmd, out_cb) {
    let exe = args.shift();
    return start_miner_raw(exe, args, out_cb);
 }
- 
+
 // *** Pool socket processing
 
 function connect_pool(pool_num, pool_ok_cb, pool_new_msg_cb, pool_err_cb) {
@@ -506,7 +517,7 @@ function connect_pool(pool_num, pool_ok_cb, pool_new_msg_cb, pool_err_cb) {
     }) + "\n");
   });
 
-  let is_pool_ok = false; 
+  let is_pool_ok = false;
   let pool_data_buff = "";
 
   pool_socket.on('data', function (msg) {
@@ -538,7 +549,7 @@ function connect_pool(pool_num, pool_ok_cb, pool_new_msg_cb, pool_err_cb) {
       } else err("Ignoring pool (" + c.pools[pool_num] + ") message since pool not reported no errors yet: " + JSON.stringify(json));
     }
     pool_data_buff = incomplete_line;
-    
+
   });
 
   pool_socket.on('end', function() {
@@ -555,7 +566,7 @@ function connect_pool(pool_num, pool_ok_cb, pool_new_msg_cb, pool_err_cb) {
     pool_err_cb(pool_num);
   });
 }
-           
+
 // *** connect_pool function callbacks
 
 function set_main_pool_check_timer() {
@@ -817,8 +828,8 @@ function do_miner_perf_runs(cb) {
               pre_pow:    "0c0ccbc9035e0000000026c1674f64401b00e6c50b681f21bb5d5bb07be6d4a9d12a8cb2b493c9c039fee90877199a9dc04dccd734cf9b4b30eae84d06b94da19614536f3a87b0fe65f201",
               algo:       "cuckaroo",
               edgebits:   29,
-              proofsize:  algo === "c29s" ? 32 : (algo === "c29b" ? 40 : 48),
-              noncebytes: 4,
+              proofsize:  algo === "c29" ? 42 : (algo === "c29s" ? 32 : (algo === "c29b" ? 40 : 48)),
+              noncebytes: algo === "c29" ? 8 : 4,
               height:     0,
               job_id:     "100000000000000",
               id:         "100000000000000",
@@ -843,7 +854,8 @@ function do_miner_perf_runs(cb) {
             }) + "\n");
             break;
 
-            case "ethash": miner_socket_write(miner_socket, JSON.stringify({
+            case "ethash":
+            case "etchash": miner_socket_write(miner_socket, JSON.stringify({
               jsonrpc:  "2.0",
               method:   "mining.set_difficulty",
               params: [
@@ -925,7 +937,7 @@ function do_miner_perf_runs(cb) {
               tree_kill(miner_proc.pid);
               break;
             } else {
-              log("Read performance for " + algo + " algo to " + hashrate + ", waiting for " + 
+              log("Read performance for " + algo + " algo to " + hashrate + ", waiting for " +
                      (nr_prints_needed - nr_prints_found) + " more print(s).");
             }
           }
