@@ -65,6 +65,7 @@ function algo_hashrate_factor(algo) {
   switch (algo) {
     case "kawpow": return 1 / 0x100000000;
     case "c29":    return 1 / 42;
+    case "cuckaroo":  return 1 / 42;
     case "c29s":   return 1 / 32;
     case "c29b":   return 1 / 40;
     case "c29v":   return 1 / 16;
@@ -157,6 +158,7 @@ function bench_algo_deps(bench_algo, perf) {
     };
     case "c29": return {
       "c29":           perf,
+      "cuckaroo":      perf,
     };
     case "c29b": return {
       "c29b":          perf,
